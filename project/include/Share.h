@@ -23,6 +23,9 @@ namespace openflShareExtension {
 
 		void doShare(const char *text, const char *url, const char *subject, const char *image);
 
+		void doImageShare(const char *image);
+		void doPDFShare(const char *pdf);
+
 		#endif
 
 }

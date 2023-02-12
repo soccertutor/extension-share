@@ -44,6 +44,18 @@ static value share_do (value text, value url, value subject, value image) {
 }
 DEFINE_PRIM(share_do, 4);
 
+static value share_image_do (value image) {
+	doImageShare(val_string(image));
+	return alloc_null();
+}
+DEFINE_PRIM(share_image_do, 1);
+
+static value share_pdf_do (value pdf) {
+	doPDFShare(val_string(pdf));
+	return alloc_null();
+}
+DEFINE_PRIM(share_pdf_do, 1);
+
 #endif
 
 extern "C" void share_main () {	

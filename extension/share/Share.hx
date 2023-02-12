@@ -16,13 +16,21 @@ class Share {
 
 	#if android
 		#if (openfl < "4.0.0")
+		private static var __shareImage : String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "shareImage", "(Ljava/lang/String;)V");
+		private static var __sharePDF : String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "sharePDF", "(Ljava/lang/String;)V");
 		private static var __share : String->String->String->String->String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "share", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 		#else
+		private static var __shareImage : String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "shareImage", "(Ljava/lang/String;)V");
+		private static var __sharePDF : String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "sharePDF", "(Ljava/lang/String;)V");
 		private static var __share : String->String->String->String->String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "share", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 		#end
 	#elseif ios
 	private static var __share : String->String->String->String->Void=cpp.Lib.load("openflShareExtension","share_do",4);
+	private static var __shareImage : String->Void=cpp.Lib.load("openflShareExtension","share_image_do",1);
+	private static var __sharePDF : String->Void=cpp.Lib.load("openflShareExtension","share_pdf_do",1);
 	#elseif blackberry
+	private static var __shareImage : String->Void=cpp.Lib.load("openflShareExtension","share_image_do",1);
+	private static var __sharePDF : String->Void=cpp.Lib.load("openflShareExtension","share_pdf_do",1);
 	private static var __share : String->String->Void=cpp.Lib.load("openflShareExtension","share_do",2);
 	private static var __query : Void->Array<ShareQueryResult>=cpp.Lib.load("openflShareExtension","share_query",0);
 	#end
@@ -100,7 +108,7 @@ class Share {
 				return null;
 			}
 		}
-		var bytes:ByteArray = bdm.encode(bdm.rect, new JPEGEncoderOptions());
+		var bytes:ByteArray = bdm.encode(bdm.rect, new JPEGEncoderOptions( 100 ));
 		try {
 			sys.io.File.saveBytes(imagePath, bytes);
 		} catch(e:Dynamic) {
@@ -174,6 +182,19 @@ class Share {
 		}catch(e:Dynamic){
 			trace("Share SHARE Exception: "+e);
 		}
+	}
+
+	public static function shareImage(bdm:BitmapData) {
+		var sharedImagePath:String = null;
+		sharedImagePath = saveBitmapData(bdm);
+
+		if (sharedImagePath != null) {
+			__shareImage(sharedImagePath);
+		}
+	}
+	
+	public static function sharePDF(path:String) {
+		__sharePDF(path);
 	}
 
 	///////////////////////////////////////////////////////////////////////////
