@@ -16,12 +16,12 @@ class Share {
 
 	#if android
 		#if (openfl < "4.0.0")
-		private static var __shareImage : String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "shareImage", "(Ljava/lang/String;)V");
-		private static var __sharePDF : String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "sharePDF", "(Ljava/lang/String;)V");
+		private static var __shareImage : String->String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "shareImage", "(Ljava/lang/String;Ljava/lang/String;)V");
+		private static var __sharePDF : String->String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "sharePDF", "(Ljava/lang/String;Ljava/lang/String;)V");
 		private static var __share : String->String->String->String->String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "share", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 		#else
-		private static var __shareImage : String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "shareImage", "(Ljava/lang/String;)V");
-		private static var __sharePDF : String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "sharePDF", "(Ljava/lang/String;)V");
+		private static var __shareImage : String->String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "shareImage", "(Ljava/lang/String;Ljava/lang/String;)V");
+		private static var __sharePDF : String->String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "sharePDF", "(Ljava/lang/String;Ljava/lang/String;)V");
 		private static var __share : String->String->String->String->String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "share", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 		#end
 	#elseif ios
@@ -96,10 +96,19 @@ class Share {
 	public static function saveBitmapData(bdm:BitmapData, fName="shareimage.jpg"):String {
 		var imagePath:String = "";
 		#if (!lime_legacy)
-			imagePath = lime.system.System.documentsDirectory + "/" + fName;
+			#if android
+				imagePath = lime.system.System.applicationStorageDirectory;
+				if (!StringTools.endsWith( imagePath, "/" )) {
+					imagePath += "/";
+				}
+				imagePath += fName;
+			#elseif ios
+				imagePath = lime.system.System.documentsDirectory + "/" + fName;
+			#end
 		#else
 			imagePath = openfl.utils.SystemPath.documentsDirectory + "/" + fName;
 		#end
+
 		if (sys.FileSystem.exists(imagePath)) {
 			try {
 				sys.FileSystem.deleteFile(imagePath);
@@ -184,17 +193,25 @@ class Share {
 		}
 	}
 
-	public static function shareImage(bdm:BitmapData) {
+	public static function shareImage(fileProvider:String, fileName:String, bdm:BitmapData) {
 		var sharedImagePath:String = null;
-		sharedImagePath = saveBitmapData(bdm);
+		sharedImagePath = saveBitmapData(bdm, fileName);
 
 		if (sharedImagePath != null) {
-			__shareImage(sharedImagePath);
+			#if android
+			__shareImage(fileProvider, fileName);
+			#elseif ios
+			__shareImage(fileName);
+			#end
 		}
 	}
 	
-	public static function sharePDF(path:String) {
-		__sharePDF(path);
+	public static function sharePDF(fileProvider:String, fileName:String) {
+		#if android
+			__sharePDF(fileProvider, fileName);
+		#elseif ios
+			__sharePDF(fileName);
+		#end
 	}
 
 	///////////////////////////////////////////////////////////////////////////
