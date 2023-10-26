@@ -43,6 +43,50 @@ class SimpleExample {
 
 ```
 
+### How to share PDF or Image on Android/iOS via native share
+
+#### iOS 
+```haxe
+Share.shareImage("", "shareimage.jpg", bitmapData);
+
+Share.sharePDF("", "Untitled.pdf");
+```
+
+#### Android 
+```haxe
+Share.shareImage("com.yourapp.fileprovider", "shareimage.jpg", bitmapData);
+
+Share.sharePDF("com.yourapp.fileprovider", "Untitled.pdf");
+```
+
+For Aandroid we need several changes:
+
+- copy android templates folder from lime templates to you project
+***[lime path]/templates/android***
+- add template path to **project.xml**
+	```xml
+	<template path="templates"/>
+	```
+- add **provider** inside ***application*** tag in ***templates/android/template/app/src/main/AndroidManifest.xml***
+	```xml
+	<provider
+		android:name="androidx.core.content.FileProvider"
+		android:authorities="com.yourapp.fileprovider"
+		android:grantUriPermissions="true"
+		android:exported="false">
+		<meta-data
+			android:name="android.support.FILE_PROVIDER_PATHS"
+			android:resource="@xml/provider_paths" />
+	</provider>
+	```
+- add ***provider_paths.xml*** to ***templates/android/template/app/src/main/res/xml/provider_paths.xml***
+	```xml
+	<?xml version="1.0" encoding="utf-8"?>
+	<paths xmlns:android="http://schemas.android.com/apk/res/android">
+		<files-path name="files" path="." />
+	</paths>
+	```
+
 ### How to Install
 
 ```bash
