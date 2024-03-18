@@ -103,7 +103,11 @@ class Share {
 				}
 				imagePath += fName;
 			#elseif ios
-				imagePath = lime.system.System.documentsDirectory + "/" + fName;
+				imagePath = lime.system.System.documentsDirectory;
+				if (!StringTools.endsWith( imagePath, "/" )) {
+					imagePath += "/";
+				}
+				imagePath += fName;
 			#end
 		#else
 			imagePath = openfl.utils.SystemPath.documentsDirectory + "/" + fName;
@@ -201,7 +205,7 @@ class Share {
 			#if android
 			__shareImage(fileProvider, fileName);
 			#elseif ios
-			__shareImage(fileName);
+			__shareImage(sharedImagePath);
 			#end
 		}
 	}
