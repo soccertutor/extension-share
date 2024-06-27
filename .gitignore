@@ -3,5 +3,6 @@ project/obj
 ndll/*/*.a
 ndll/*/*.so
 ndll/*/*.ndll
+ndll/*/*.hash
 project/obj/*
 .DS_Store
