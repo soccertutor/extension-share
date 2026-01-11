@@ -1,4 +1,4 @@
-package shareex;
+package org.haxe.extension;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,7 +7,7 @@ import org.haxe.extension.Extension;
 import java.io.File;
 import androidx.core.content.FileProvider;
 
-public class ShareEx {
+public class Share {
 
 	public static void share(String text, String subject, String html, String email, String image) {
 		Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -40,10 +40,10 @@ public class ShareEx {
 		sendIntent.setType("image/jpg");
 		sendIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
     	sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        
+
 		Extension.mainActivity.getApplicationContext().startActivity(sendIntent);
 	}
-	
+
 	public static void sharePDF(String fileProvider, String pdfName) {
 		File pdfFile = new File(Extension.mainContext.getFilesDir(), pdfName);
         Uri pdfUri = FileProvider.getUriForFile(
@@ -57,7 +57,7 @@ public class ShareEx {
 		sendIntent.setType("application/pdf");
 		sendIntent.putExtra(Intent.EXTRA_STREAM, pdfUri);
     	sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        
+
 		Extension.mainActivity.getApplicationContext().startActivity(sendIntent);
 	}
 
