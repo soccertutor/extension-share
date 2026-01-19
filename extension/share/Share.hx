@@ -16,13 +16,13 @@ class Share {
 
 	#if android
 		#if (openfl < "4.0.0")
-		private static var __shareImage : String->String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "shareImage", "(Ljava/lang/String;Ljava/lang/String;)V");
-		private static var __sharePDF : String->String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "sharePDF", "(Ljava/lang/String;Ljava/lang/String;)V");
-		private static var __share : String->String->String->String->String->Void=openfl.utils.JNI.createStaticMethod("shareex/ShareEx", "share", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+		private static var __shareImage : String->String->Void=openfl.utils.JNI.createStaticMethod("org/haxe/extension/Share", "shareImage", "(Ljava/lang/String;Ljava/lang/String;)V");
+		private static var __sharePDF : String->String->Void=openfl.utils.JNI.createStaticMethod("org/haxe/extension/Share", "sharePDF", "(Ljava/lang/String;Ljava/lang/String;)V");
+		private static var __share : String->String->String->String->String->Void=openfl.utils.JNI.createStaticMethod("org/haxe/extension/share/Share", "share", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 		#else
-		private static var __shareImage : String->String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "shareImage", "(Ljava/lang/String;Ljava/lang/String;)V");
-		private static var __sharePDF : String->String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "sharePDF", "(Ljava/lang/String;Ljava/lang/String;)V");
-		private static var __share : String->String->String->String->String->Void=lime.system.JNI.createStaticMethod("shareex/ShareEx", "share", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+		private static var __shareImage : String->String->Void=lime.system.JNI.createStaticMethod("org/haxe/extension/Share", "shareImage", "(Ljava/lang/String;Ljava/lang/String;)V");
+		private static var __sharePDF : String->String->Void=lime.system.JNI.createStaticMethod("org/haxe/extension/Share", "sharePDF", "(Ljava/lang/String;Ljava/lang/String;)V");
+		private static var __share : String->String->String->String->String->Void=lime.system.JNI.createStaticMethod("org/haxe/extension/Share", "share", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 		#end
 	#elseif ios
 	private static var __share : String->String->String->String->Void=cpp.Lib.load("openflShareExtension","share_do",4);
@@ -209,7 +209,7 @@ class Share {
 			#end
 		}
 	}
-	
+
 	public static function sharePDF(fileProvider:String, fileName:String) {
 		#if android
 			__sharePDF(fileProvider, fileName);
